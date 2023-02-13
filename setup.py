@@ -25,3 +25,5 @@ images, labels = dataiter.next()
 print(images.shape)
 print(labels.shape)
 
+plt.imshow(images[0].numpy().squeeze(), cmap='plasma')
+plt.show()
