@@ -17,6 +17,8 @@ def main():
     if not args.dir[-1] == '/':
         dir += '/'
 
+
+    n = len(os.listdir(args.dir))
     for i in [1, 10, 20, 80]:
         n = n - 1
         os.system(f"echo -n \"{i} epochs\" >> {FILE}")
