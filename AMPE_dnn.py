@@ -12,17 +12,23 @@ from torchvision import datasets, transforms
 from torch import nn, optim
 
 
-
-EPOCHS = 15
-WEIGHTS_PATH='my_weights.pt'
+PARENT_PATH = './weights2/'
 
 
 class My_DNN(nn.Module):
-    def __init__(self):
+    def __init__(self, epochs=15, file='my_weights.pt'):
         super().__init__()
         self.fc1 = nn.Linear(784, 128)
         self.fc2 = nn.Linear(128, 64)
         self.fc3 = nn.Linear(64,10)
+
+        self.epochs = epochs
+        self.file = file
+        # self.path_train = path_train
+        # self.path_test = path_test
+
+        self.file = PARENT_PATH + self.file
+        
 
     def forward(self, x):
         x = self.fc1(x)
@@ -35,26 +41,13 @@ class My_DNN(nn.Module):
 
 
     def train(self):
-        pass
+        trainloader, valloader = before()
+        train(model=self, trainloader=trainloader, valloader=valloader)
 
+        
+        
 
-
-
-def main():
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-e", "--epochs", help="number of epochs", type=int, required=False)
-    parser.add_argument("-f", "--file", help="weights file", required=False)
-    args = parser.parse_args()
-
-    if args.epochs:
-        EPOCHS = args.epochs
-
-    if args.file:
-        WEIGHTS_PATH = args.file
-
-    WEIGHTS_PATH = "./weights/" + WEIGHTS_PATH
-
+def before():
 
     transform = transforms.Compose([transforms.ToTensor(),
                         transforms.Normalize((0.5,), (0.5,)),])
@@ -67,19 +60,15 @@ def main():
 
     valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=True)
 
-    dataiter = iter(trainloader)
-    images, labels = dataiter.next()
+    # dataiter = iter(trainloader)
+    # images, labels = dataiter.next()
 
-    print(images.shape)
-    print(labels.shape)
-
-    plt.imshow(images[0].numpy().squeeze(), cmap='plasma')
-    plt.show()
+    return (trainloader, valloader)
 
 
-    model = My_DNN()
-    print(model)
+def train(model : My_DNN, trainloader, valloader):
 
+    valloader = before()
     images, labels = next(iter(valloader))
 
     img = images[0].view(1, 784)
@@ -89,24 +78,6 @@ def main():
 
     ps = torch.exp(logps)
     probab = list(ps.numpy()[0])
-    print("Predicted Digit =", probab.index(max(probab)))
-
-    # Ver imagen
-    ps = ps.data.numpy().squeeze()
-    fig, (ax1, ax2) = plt.subplots(figsize=(6, 9), ncols=2)
-    plt.tight_layout()
-
-    ax1.imshow(img.resize_(1, 28, 28).numpy().squeeze(), cmap='plasma')
-    ax1.axis('off')
-
-    ax2.barh(np.arange(len(ps)), ps)
-    ax2.set_aspect(0.1)
-    ax2.set_yticks(np.arange(len(ps)))
-    ax2.set_yticklabels(np.arange(len(ps)))
-    ax2.set_title('Class Probability')
-    ax2.set_xlim(0, 1.1)
-
-    plt.show()
 
 
     # PASO 3: DEFINICION DE LA FUNCION DE PERDIDA
@@ -123,7 +94,7 @@ def main():
     optimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
     time0 = time()
 
-    for e in range(EPOCHS):
+    for e in range(model.epochs):
         running_loss = 0
 
         for images, labels in trainloader:
@@ -185,12 +156,5 @@ def main():
     print("\nModel Accuracy =", (correct_count/all_count))
 
 
-    torch.save(model.state_dict(), WEIGHTS_PATH)
+    torch.save(model.state_dict(), model.file)
 
-
-
-
-
-
-if __name__ == "__main__":
-    main()
