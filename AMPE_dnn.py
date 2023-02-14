@@ -1,9 +1,20 @@
 import torch.nn as nn
 import torch.nn.functional as F
+import argparse
+
+
+import numpy as np
+import torch
+import torchvision
+import matplotlib.pyplot as plt
+from time import time
+from torchvision import datasets, transforms
+from torch import nn, optim
+
 
 
 EPOCHS = 15
-WEIGHTS_PATH='./my_weights.pt'
+WEIGHTS_PATH='my_weights.pt'
 
 
 class My_DNN(nn.Module):
@@ -30,6 +41,42 @@ class My_DNN(nn.Module):
 
 
 def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-e", "--epochs", help="number of epochs", type=int, required=False)
+    parser.add_argument("-f", "--file", help="weights file", required=False)
+    args = parser.parse_args()
+
+    if args.epochs:
+        EPOCHS = args.epochs
+
+    if args.file:
+        WEIGHTS_PATH = args.file
+
+    WEIGHTS_PATH = "./weights/" + WEIGHTS_PATH
+
+
+    transform = transforms.Compose([transforms.ToTensor(),
+                        transforms.Normalize((0.5,), (0.5,)),])
+
+    trainset = datasets.MNIST('PATH_TO_STORE_TRAINSET', download=True, train=True,transform=transform)
+
+    valset = datasets.MNIST('PATH_TO_STORE_TESTSET', download=True, train=False, transform=transform)
+
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
+
+    valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=True)
+
+    dataiter = iter(trainloader)
+    images, labels = dataiter.next()
+
+    print(images.shape)
+    print(labels.shape)
+
+    plt.imshow(images[0].numpy().squeeze(), cmap='plasma')
+    plt.show()
+
+
     model = My_DNN()
     print(model)
 
@@ -76,7 +123,7 @@ def main():
     optimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
     time0 = time()
 
-    for e in range(epochs):
+    for e in range(EPOCHS):
         running_loss = 0
 
         for images, labels in trainloader:
