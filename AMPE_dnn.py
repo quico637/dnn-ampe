@@ -12,7 +12,7 @@ from torchvision import datasets, transforms
 from torch import nn, optim
 
 
-PARENT_PATH = './weights2/'
+PARENT_PATH = './weights3/'
 
 
 class My_DNN(nn.Module):
@@ -68,7 +68,6 @@ def before():
 
 def train(model : My_DNN, trainloader, valloader):
 
-    valloader = before()
     images, labels = next(iter(valloader))
 
     img = images[0].view(1, 784)
