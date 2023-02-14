@@ -175,9 +175,6 @@ def validate(model : My_DNN, valloader):
     ps = torch.exp(logps)
     probab = list(ps.numpy()[0])
 
-    print("Predicted Digit =", probab.index(max(probab)))
-    print(labels[0].item())
-
 
 
 
@@ -199,6 +196,6 @@ def validate(model : My_DNN, valloader):
                 correct_count += 1
             all_count += 1
 
-    print("Number Of Images Tested =", all_count)
-    print("\nModel Accuracy =", (correct_count/all_count))
+    # print("Number Of Images Tested =", all_count)
+    print(str(correct_count/all_count))
 
