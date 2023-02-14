@@ -2,7 +2,7 @@ import os
 import argparse
 
 
-FILE = 'vals.txt'
+FILE = 'accuracy.csv'
 
 os.system(f'echo -n "" > {FILE}')
 
@@ -21,7 +21,7 @@ def main():
     for file in os.listdir(args.dir):
         n = n - 1
         os.system(f"python3 validation.py -f {dir}{file} >> {FILE}")
-        
+
         if n > 0:
             os.system(f"echo -n \";\" >> {FILE}")
 

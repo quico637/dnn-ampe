@@ -197,5 +197,5 @@ def validate(model : My_DNN, valloader):
             all_count += 1
 
     # print("Number Of Images Tested =", all_count)
-    print(str(correct_count/all_count))
+    print(str(correct_count/all_count), end="")
 
