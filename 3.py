@@ -31,6 +31,7 @@ def main():
 
     inferenciaMultiple(WEIGHTS_PATH)
 
+
     
 if __name__ == "__main__":
     main()
