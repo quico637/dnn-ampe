@@ -6,7 +6,6 @@ import argparse
 import numpy as np
 import torch
 import torchvision
-import matplotlib.pyplot as plt
 from time import time
 from torchvision import datasets, transforms
 from torch import nn, optim
@@ -37,6 +36,27 @@ class My_DNN(nn.Module):
     def train(self):
         pass
 
+    def inferencia(self, image):
+        _,valloader = before()
+        inferencia(model=self,valloader=valloader,image=image)
+
+def before():
+
+    transform = transforms.Compose([transforms.ToTensor(),
+                        transforms.Normalize((0.5,), (0.5,)),])
+
+    trainset = datasets.MNIST('PATH_TO_STORE_TRAINSET', download=True, train=True,transform=transform)
+
+    valset = datasets.MNIST('PATH_TO_STORE_TESTSET', download=True, train=False, transform=transform)
+
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
+
+    valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=True)
+
+    # dataiter = iter(trainloader)
+    # images, labels = dataiter.next()
+
+    return (trainloader, valloader)
 
 
 
@@ -146,10 +166,14 @@ def main():
     print("\nTraining Time (in minutes) =",(time()-time0)/60)
 
 
-
+def inferencia(model : My_DNN ,valloader,image):
     # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
-    images, labels = next(iter(valloader))
-    img = images[0].view(1, 784)
+    transform = torchvision.transforms.Compose([
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize((0.5,), (0.5,))])
+    imagen_preprocesada = transform(image)
+
+    img = imagen_preprocesada.view(1, 784)
 
     with torch.no_grad():
         logps = model(img)
@@ -158,8 +182,7 @@ def main():
     probab = list(ps.numpy()[0])
 
     print("Predicted Digit =", probab.index(max(probab)))
-    print(labels[0].item())
-
+    return
 
 
 
