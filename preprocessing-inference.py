@@ -1,6 +1,4 @@
 import argparse
-import random
-import sys
 from AMPE_dnn_mariano import My_DNN
 import torch
 from PIL import Image
@@ -16,8 +14,15 @@ def main():
 
     with Image.open(args.image) as imagenDigito:
         imagen = imagenDigito.convert('L').resize((28,28))
-        px = list(imagen.getdata())
-        print(px[0])
+
+        # Grayscale
+        imagen = imagen.convert('L')
+        # Threshold
+        imagen = imagen.point( lambda p: 255 if p > 128 else 0 )
+        # To mono
+        imagen = imagen.convert('1')
+
+        imagen.save("geeks.jpg")
 
         model2 = My_DNN()
         model2.load_state_dict(torch.load(WEIGHTS_PATH))

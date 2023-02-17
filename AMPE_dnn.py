@@ -41,161 +41,165 @@ class My_DNN(nn.Module):
 
 
     def train(self):
-        trainloader, valloader = before()
-        train(model=self, trainloader=trainloader, valloader=valloader)
+        trainloader, valloader = self.__before()
+        self.__train(model=self, trainloader=trainloader, valloader=valloader)
 
     def validate(self):
-        _, valloader = before()
-        validate(model=self, valloader=valloader)
+        _, valloader = self.__before()
+        self.__validate(valloader=valloader)
 
         
         
 
-def before():
+    def __before(self):
 
-    transform = transforms.Compose([transforms.ToTensor(),
-                        transforms.Normalize((0.5,), (0.5,)),])
+        transform = transforms.Compose([transforms.ToTensor(),
+                            transforms.Normalize((0.5,), (0.5,)),])
 
-    trainset = datasets.MNIST('PATH_TO_STORE_TRAINSET', download=True, train=True,transform=transform)
+        trainset = datasets.MNIST('PATH_TO_STORE_TRAINSET', download=True, train=True,transform=transform)
 
-    valset = datasets.MNIST('PATH_TO_STORE_TESTSET', download=True, train=False, transform=transform)
+        valset = datasets.MNIST('PATH_TO_STORE_TESTSET', download=True, train=False, transform=transform)
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
+        trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
 
-    valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=True)
+        valloader = torch.utils.data.DataLoader(valset, batch_size=64, shuffle=True)
 
-    # dataiter = iter(trainloader)
-    # images, labels = dataiter.next()
+        # dataiter = iter(trainloader)
+        # images, labels = dataiter.next()
 
-    return (trainloader, valloader)
-
-
-def train(model : My_DNN, trainloader, valloader):
-
-    images, labels = next(iter(valloader))
-
-    img = images[0].view(1, 784)
-
-    with torch.no_grad():
-        logps = model(img)
-
-    ps = torch.exp(logps)
-    probab = list(ps.numpy()[0])
+        return (trainloader, valloader)
 
 
-    # PASO 3: DEFINICION DE LA FUNCION DE PERDIDA
-    criterion = nn.NLLLoss()
-    images, labels = next(iter(trainloader))
-    images = images.view(images.shape[0], -1)
-    logps = model(images) #log probabilities
-    loss = criterion(logps, labels) #calculate the NLL loss
+    def __train(self, trainloader, valloader):
 
-    print('Before backward pass: \n', model.fc1.weight.grad)
-    loss.backward()
-    print('After backward pass: \n', model.fc1.weight.grad)
+        model = self
 
-    optimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
-    time0 = time()
+        images, labels = next(iter(valloader))
 
-    for e in range(model.epochs):
-        running_loss = 0
+        img = images[0].view(1, 784)
 
-        for images, labels in trainloader:
-            # Flatten MNIST images into a 784 long vector
-            images = images.view(images.shape[0], -1)
+        with torch.no_grad():
+            logps = model(img)
 
-            # Training pass
-            optimizer.zero_grad()
-
-            output = model(images)
-            loss = criterion(output, labels)
-
-            loss.backward()
-
-            optimizer.step()
-            running_loss += loss.item()
-        else:
-            print("Epoch {} - Training loss: {}".format(e, running_loss/len(trainloader)))
-
-    print("\nTraining Time (in minutes) =",(time()-time0)/60)
+        ps = torch.exp(logps)
+        probab = list(ps.numpy()[0])
 
 
+        # PASO 3: DEFINICION DE LA FUNCION DE PERDIDA
+        criterion = nn.NLLLoss()
+        images, labels = next(iter(trainloader))
+        images = images.view(images.shape[0], -1)
+        logps = model(images) #log probabilities
+        loss = criterion(logps, labels) #calculate the NLL loss
 
-    # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
-    images, labels = next(iter(valloader))
-    img = images[0].view(1, 784)
+        print('Before backward pass: \n', model.fc1.weight.grad)
+        loss.backward()
+        print('After backward pass: \n', model.fc1.weight.grad)
 
-    with torch.no_grad():
-        logps = model(img)
+        optimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
+        time0 = time()
 
-    ps = torch.exp(logps)
-    probab = list(ps.numpy()[0])
+        for e in range(model.epochs):
+            running_loss = 0
 
-    print("Predicted Digit =", probab.index(max(probab)))
-    print(labels[0].item())
+            for images, labels in trainloader:
+                # Flatten MNIST images into a 784 long vector
+                images = images.view(images.shape[0], -1)
+
+                # Training pass
+                optimizer.zero_grad()
+
+                output = model(images)
+                loss = criterion(output, labels)
+
+                loss.backward()
+
+                optimizer.step()
+                running_loss += loss.item()
+            else:
+                print("Epoch {} - Training loss: {}".format(e, running_loss/len(trainloader)))
+
+        print("\nTraining Time (in minutes) =",(time()-time0)/60)
 
 
 
+        # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
+        images, labels = next(iter(valloader))
+        img = images[0].view(1, 784)
 
-    # 5.5
+        with torch.no_grad():
+            logps = model(img)
 
-    correct_count, all_count = 0, 0
-    for images,labels in valloader:
-        for i in range(len(labels)):
-            img = images[i].view(1, 784)
-            with torch.no_grad():
-                logps = model(img)
+        ps = torch.exp(logps)
+        probab = list(ps.numpy()[0])
 
-            ps = torch.exp(logps)
-            probab = list(ps.numpy()[0])
-            pred_label = probab.index(max(probab))
-            true_label = labels.numpy()[i]
-
-            if (true_label == pred_label):
-                correct_count += 1
-            all_count += 1
-
-    print("Number Of Images Tested =", all_count)
-    print("\nModel Accuracy =", (correct_count/all_count))
-
-
-    torch.save(model.state_dict(), model.file)
-
-
-
-def validate(model : My_DNN, valloader):
-
-    # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
-    images, labels = next(iter(valloader))
-    img = images[0].view(1, 784)
-
-    with torch.no_grad():
-        logps = model(img)
-
-    ps = torch.exp(logps)
-    probab = list(ps.numpy()[0])
+        print("Predicted Digit =", probab.index(max(probab)))
+        print(labels[0].item())
 
 
 
 
-    # 5.5
+        # 5.5
 
-    correct_count, all_count = 0, 0
-    for images,labels in valloader:
-        for i in range(len(labels)):
-            img = images[i].view(1, 784)
-            with torch.no_grad():
-                logps = model(img)
+        correct_count, all_count = 0, 0
+        for images,labels in valloader:
+            for i in range(len(labels)):
+                img = images[i].view(1, 784)
+                with torch.no_grad():
+                    logps = model(img)
 
-            ps = torch.exp(logps)
-            probab = list(ps.numpy()[0])
-            pred_label = probab.index(max(probab))
-            true_label = labels.numpy()[i]
+                ps = torch.exp(logps)
+                probab = list(ps.numpy()[0])
+                pred_label = probab.index(max(probab))
+                true_label = labels.numpy()[i]
 
-            if (true_label == pred_label):
-                correct_count += 1
-            all_count += 1
+                if (true_label == pred_label):
+                    correct_count += 1
+                all_count += 1
 
-    # print("Number Of Images Tested =", all_count)
-    print(str(correct_count/all_count), end="")
+        print("Number Of Images Tested =", all_count)
+        print("\nModel Accuracy =", (correct_count/all_count))
+
+
+        torch.save(model.state_dict(), model.file)
+
+
+
+    def __validate(self, valloader):
+
+        model = self
+
+        # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
+        images, labels = next(iter(valloader))
+        img = images[0].view(1, 784)
+
+        with torch.no_grad():
+            logps = model(img)
+
+        ps = torch.exp(logps)
+        probab = list(ps.numpy()[0])
+
+
+
+
+        # 5.5
+
+        correct_count, all_count = 0, 0
+        for images,labels in valloader:
+            for i in range(len(labels)):
+                img = images[i].view(1, 784)
+                with torch.no_grad():
+                    logps = model(img)
+
+                ps = torch.exp(logps)
+                probab = list(ps.numpy()[0])
+                pred_label = probab.index(max(probab))
+                true_label = labels.numpy()[i]
+
+                if (true_label == pred_label):
+                    correct_count += 1
+                all_count += 1
+
+        # print("Number Of Images Tested =", all_count)
+        print(str(correct_count/all_count), end="")
 
