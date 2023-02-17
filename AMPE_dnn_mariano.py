@@ -180,7 +180,7 @@ def inferencia(model : My_DNN ,valloader,image):
 
     ps = torch.exp(logps)
     probab = list(ps.numpy()[0])
-
+    
     print("Predicted Digit =", probab.index(max(probab)))
     return
 
