@@ -26,7 +26,7 @@ python3 train.py -e <epochs_number>
 Similarly to the previous exercise, you can run it simply by:
 
 ```
-python3 2.py 
+python3 2.py -d <weights_directory>
 ```
 
 And just in case that you want to validate an other set of weights files with appropiated formatted names, you ccan run:
