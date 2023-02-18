@@ -41,7 +41,7 @@ python3 validation.py -f <directory_path>
 To test the model, we can select 10 random images from the validation dataset and make it predict them. To do that, just exec the following command:
 
 ```
-python3 3.py 
+python3 3.py -f <weights_file>
 ```
 
 ## 4. Own digit recognition
@@ -55,8 +55,9 @@ To run the script you should specify:
 
 To run it: 
 
+
 ```
-python3 inferencia.py -f <directory_path>
+python3 inferencia.py -f <weights_file> -i <image_file>
 ```
 
 ## 5. Preprocessing

@@ -49,11 +49,11 @@ def inferenciaMultiple(pesos_path):
 
 def main():          
     parser = argparse.ArgumentParser()
-    parser.add_argument("-w", "--weights", help="directory", required=True)
+    parser.add_argument("-f", "--weightsfile", help="weights file", required=True)
     args = parser.parse_args()
 
-    if args.weights:
-        WEIGHTS_PATH = args.weights
+    if args.weightsfile:
+        WEIGHTS_PATH = args.weightsfile
 
     inferenciaMultiple(WEIGHTS_PATH)
 
