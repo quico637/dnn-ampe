@@ -1,17 +1,12 @@
 import os
 import random
-import torch.nn as nn
-import torch.nn.functional as F
 import argparse
-
-
 import numpy as np
 import torch
-import torchvision
-from time import time
 from torchvision import datasets, transforms
 from torchvision.transforms.functional import to_pil_image
-from torch import nn, optim
+
+from PIL import Image
 
 from AMPE_dnn import My_DNN
 

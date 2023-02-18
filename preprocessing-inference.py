@@ -1,5 +1,5 @@
 import argparse
-from AMPE_dnn_mariano import My_DNN
+from AMPE_dnn import My_DNN
 import torch
 from PIL import Image
 

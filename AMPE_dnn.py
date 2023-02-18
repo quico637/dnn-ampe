@@ -58,12 +58,14 @@ class My_DNN(nn.Module):
         img = imagen_preprocesada.view(1, 784)
 
         with torch.no_grad():
-            logps = model(img)
+            logps = self(img)
 
         ps = torch.exp(logps)
         probab = list(ps.numpy()[0])
         
         print("Predicted Digit =", probab.index(max(probab)))
+
+
 
         
         
@@ -175,4 +177,5 @@ class My_DNN(nn.Module):
 
         # print("Number Of Images Tested =", all_count)
         print(str(correct_count/all_count), end="")
+
 

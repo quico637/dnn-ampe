@@ -1,6 +1,4 @@
 import argparse
-import random
-import sys
 from AMPE_dnn import My_DNN
 import torch
 from PIL import Image
