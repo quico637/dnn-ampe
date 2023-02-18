@@ -30,7 +30,7 @@ def borrar_archivos_carpeta(folder_path):
             print(f"Error al eliminar {file_path}: {e}")
 
 def inferenciaMultiple(pesos_path):
-    IMAGES_PATH = "./imagenes3/"
+    IMAGES_PATH = "./images/"
     borrar_archivos_carpeta(IMAGES_PATH)
     nombre_archivo = f"{PARENT_PATH}resultado_ej3.txt"
     with open(nombre_archivo, 'w') as f:
