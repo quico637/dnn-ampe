@@ -1,10 +1,12 @@
 
 import os
 
-PARENT_PATH = './output/'
+PARENT_PATH = './outputs/'
 FILE = PARENT_PATH + 'times.csv'
 
 def main():
+    with open(FILE, 'w') as f:
+        pass
     os.system(f'echo -n "" > {FILE}')
 
 

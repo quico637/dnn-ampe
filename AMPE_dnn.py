@@ -42,7 +42,7 @@ class My_DNN(nn.Module):
 
     def train(self):
         trainloader, valloader = self.__before()
-        self.__train(model=self, trainloader=trainloader, valloader=valloader)
+        self.__train(trainloader=trainloader, valloader=valloader)
 
     def validate(self):
         _, valloader = self.__before()
