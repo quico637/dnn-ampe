@@ -57,7 +57,7 @@ def main():
     parser.add_argument("-w", "--weights", help="directory", required=True)
     args = parser.parse_args()
 
-    if args.file:
+    if args.weights:
         WEIGHTS_PATH = args.weights
 
     inferenciaMultiple(WEIGHTS_PATH)
