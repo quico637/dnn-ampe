@@ -59,7 +59,5 @@ To run it:
 python3 inferencia.py -f <directory_path>
 ```
 
-
-# 5. Preprocessing
-
+# 5. Preprocessing
 If the previous script does not recognize your digit, you can try running `preprocessing-inference.py` with the same syntax.
