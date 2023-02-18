@@ -17,6 +17,7 @@ from AMPE_dnn import My_DNN
 
 PARENT_PATH = './outputs/'
 
+
 def borrar_archivos_carpeta(folder_path):
     print("limpiando la carpeta de fotos")
     for filename in os.listdir(folder_path):
@@ -29,7 +30,7 @@ def borrar_archivos_carpeta(folder_path):
             print(f"Error al eliminar {file_path}: {e}")
 
 def inferenciaMultiple(pesos_path):
-    IMAGES_PATH = "./images/"
+    IMAGES_PATH = "./imagenes3/"
     borrar_archivos_carpeta(IMAGES_PATH)
     nombre_archivo = f"{PARENT_PATH}resultado_ej3.txt"
     with open(nombre_archivo, 'w') as f:
@@ -53,11 +54,11 @@ def inferenciaMultiple(pesos_path):
 
 def main():          
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--file", help="weights file", required=True)
+    parser.add_argument("-w", "--weights", help="directory", required=True)
     args = parser.parse_args()
 
     if args.file:
-        WEIGHTS_PATH = args.file
+        WEIGHTS_PATH = args.weights
 
     inferenciaMultiple(WEIGHTS_PATH)
 
