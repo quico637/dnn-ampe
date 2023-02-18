@@ -1,7 +1,8 @@
 
 import os
 
-FILE = 'times.txt'
+PARENT_PATH = './output/'
+FILE = PARENT_PATH + 'times.txt'
 
 os.system(f'echo -n "" > {FILE}')
 

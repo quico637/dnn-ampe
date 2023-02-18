@@ -12,7 +12,7 @@ from torchvision import datasets, transforms
 from torch import nn, optim
 
 
-PARENT_PATH = './weights3/'
+PARENT_PATH = './weights/'
 
 
 class My_DNN(nn.Module):
@@ -47,6 +47,23 @@ class My_DNN(nn.Module):
     def validate(self):
         _, valloader = self.__before()
         self.__validate(valloader=valloader)
+
+    def inferencia(self, image):
+        # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
+        transform = torchvision.transforms.Compose([
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize((0.5,), (0.5,))])
+        imagen_preprocesada = transform(image)
+
+        img = imagen_preprocesada.view(1, 784)
+
+        with torch.no_grad():
+            logps = model(img)
+
+        ps = torch.exp(logps)
+        probab = list(ps.numpy()[0])
+        
+        print("Predicted Digit =", probab.index(max(probab)))
 
         
         
@@ -92,9 +109,7 @@ class My_DNN(nn.Module):
         logps = model(images) #log probabilities
         loss = criterion(logps, labels) #calculate the NLL loss
 
-        print('Before backward pass: \n', model.fc1.weight.grad)
         loss.backward()
-        print('After backward pass: \n', model.fc1.weight.grad)
 
         optimizer = optim.SGD(model.parameters(), lr=0.003, momentum=0.9)
         time0 = time()
@@ -116,50 +131,8 @@ class My_DNN(nn.Module):
 
                 optimizer.step()
                 running_loss += loss.item()
-            else:
-                print("Epoch {} - Training loss: {}".format(e, running_loss/len(trainloader)))
 
-        print("\nTraining Time (in minutes) =",(time()-time0)/60)
-
-
-
-        # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
-        images, labels = next(iter(valloader))
-        img = images[0].view(1, 784)
-
-        with torch.no_grad():
-            logps = model(img)
-
-        ps = torch.exp(logps)
-        probab = list(ps.numpy()[0])
-
-        print("Predicted Digit =", probab.index(max(probab)))
-        print(labels[0].item())
-
-
-
-
-        # 5.5
-
-        correct_count, all_count = 0, 0
-        for images,labels in valloader:
-            for i in range(len(labels)):
-                img = images[i].view(1, 784)
-                with torch.no_grad():
-                    logps = model(img)
-
-                ps = torch.exp(logps)
-                probab = list(ps.numpy()[0])
-                pred_label = probab.index(max(probab))
-                true_label = labels.numpy()[i]
-
-                if (true_label == pred_label):
-                    correct_count += 1
-                all_count += 1
-
-        print("Number Of Images Tested =", all_count)
-        print("\nModel Accuracy =", (correct_count/all_count))
-
+        print("time: ",(time()-time0)/60)
 
         torch.save(model.state_dict(), model.file)
 

@@ -1,8 +1,8 @@
 import os
 import argparse
 
-
-FILE = 'accuracy.csv'
+PARENT_PATH = './outputs/'
+FILE = PARENT_PATH + 'accuracy.csv'
 
 os.system(f'echo -n "" > {FILE}')
 

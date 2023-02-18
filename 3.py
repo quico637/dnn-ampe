@@ -13,7 +13,9 @@ from torchvision import datasets, transforms
 from torchvision.transforms.functional import to_pil_image
 from torch import nn, optim
 
-from AMPE_dnn_mariano import My_DNN
+from AMPE_dnn import My_DNN
+
+PARENT_PATH = './outputs/'
 
 def borrar_archivos_carpeta(folder_path):
     print("limpiando la carpeta de fotos")
@@ -27,9 +29,9 @@ def borrar_archivos_carpeta(folder_path):
             print(f"Error al eliminar {file_path}: {e}")
 
 def inferenciaMultiple(pesos_path):
-    IMAGES_PATH = "./imagenes3/"
+    IMAGES_PATH = "./images/"
     borrar_archivos_carpeta(IMAGES_PATH)
-    nombre_archivo = f"resultado_ej3.txt"
+    nombre_archivo = f"{PARENT_PATH}resultado_ej3.txt"
     with open(nombre_archivo, 'w') as f:
         pass
     transform = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5,), (0.5,)),])

@@ -10,7 +10,7 @@ def main():
     parser.add_argument("-f", "--file", help="weights file", required=True)
     args = parser.parse_args()
 
-    WEIGHTS_PATH = "./weights/" + args.file
+    WEIGHTS_PATH = args.file
 
     with Image.open(args.image) as imagenDigito:
         imagen = imagenDigito.convert('L').resize((28,28))
