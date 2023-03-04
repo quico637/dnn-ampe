@@ -17,9 +17,9 @@ then
     echo "AVX support: Yes"
 
     echo "Compiling PRACTICA2 User interface: test, eval_seq and eval_opt"
-    g++ -mavx src/main_test.cpp src/practica2.cpp -o practica2_test
-    g++ -mavx src/main_seq.cpp src/practica2.cpp -o practica2_eval_seq
-    g++ -mavx src/main_opt.cpp src/practica2.cpp -o practica2_eval_opt
+    g++ -mavx src/main_test.cpp src/practica2.cpp -o practica2_test -march=core-avx2
+    g++ -mavx src/main_seq.cpp src/practica2.cpp -o practica2_eval_seq -march=core-avx2
+    g++ -mavx src/main_opt.cpp src/practica2.cpp -o practica2_eval_opt -march=core-avx2
     if test $? -eq 1
     then
         echo "Please fix the code!"

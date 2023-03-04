@@ -2,7 +2,7 @@
 #include <iostream>
 #include <immintrin.h>
 
-void practica2Linear(float* MK_matrix, float* KN_matrix, float* output_matrix, int M, int K, int N) {
+void practica2LinearSeq(float* MK_matrix, float* KN_matrix, float* output_matrix, int M, int K, int N) {
      std::cout << "Running the code for optimized matrix multiplication" << std::endl;
      for(int i=0; i<M; i++) {
          for(int j=0; j<N; j++) {
@@ -16,19 +16,37 @@ void practica2Linear(float* MK_matrix, float* KN_matrix, float* output_matrix, i
      }
 }
 
-void practica2LinearSeq(float* MK_matrix, float* KN_matrix, float* output_matrix, int M, int K, int N) {
-     std::cout << "Running the code for matrix multiplication" << std::endl;
-     for(int i=0; i<M; i++) {
-         for(int j=0; j<N; j++) {
-             float suma=0.0;
-             for(int k=0; k<K; k++) {
-                 suma+=MK_matrix[i*K+k]*KN_matrix[j*K+k];
-             }
+void practica2Linear(float* MK_matrix, float* KN_matrix, float* output_matrix, int M, int K, int N) {
+    std::cout << "Running the code for matrix multiplication" << std::endl;
 
-             output_matrix[i*N+j]=suma;
-         }
-     }
+    // Número de elementos en cada vector
+    const int vector_size = 8;
 
+    // Iterar sobre las filas de la matriz MK
+    for (int i = 0; i < M; i++) {
+
+        // Iterar sobre las columnas de la matriz KN
+        for (int j = 0; j < N; j++) {
+
+            __m256 acumulador = _mm256_setzero_ps(); // Inicializar el acumulador
+
+            // Iterar sobre las columnas de la matriz MK y filas de la matriz KN
+            for (int k = 0; k < K; k += vector_size) {
+
+                // Cargar los datos en vectores de 256 bits
+                __m256 a = _mm256_loadu_ps(MK_matrix + i * K + k);
+                __m256 b = _mm256_loadu_ps(KN_matrix + j * K + k);
+
+                // Multiplicar y acumular usando FMA
+                acumulador = _mm256_fmadd_ps(a, b, acumulador);
+            }
+
+            // Sumar los elementos del acumulador y almacenar el resultado en la matriz de salida
+            float temp[8];
+            _mm256_storeu_ps(temp, acumulador);
+            output_matrix[i * N + j] = temp[0] + temp[1] + temp[2] + temp[3] + temp[4] + temp[5] + temp[6] + temp[7];
+        }
+    }
 }
 
 
