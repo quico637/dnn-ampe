@@ -17,6 +17,10 @@ then
     echo "AVX support: Yes"
 
     echo "Compiling PRACTICA2 User interface: test, eval_seq and eval_opt"
+    #Esto es para usar omp :)
+    #g++ -mavx -fopenmp src/main_test.cpp src/practica2.cpp -o practica2_test -march=core-avx2
+    #g++ -mavx -fopenmp src/main_seq.cpp src/practica2.cpp -o practica2_eval_seq -march=core-avx2
+    #g++ -mavx -fopenmp src/main_opt.cpp src/practica2.cpp -o practica2_eval_opt -march=core-avx2
     g++ -mavx -fopenmp src/main_test.cpp src/practica2.cpp -o practica2_test -march=core-avx2
     g++ -mavx -fopenmp src/main_seq.cpp src/practica2.cpp -o practica2_eval_seq -march=core-avx2
     g++ -mavx -fopenmp src/main_opt.cpp src/practica2.cpp -o practica2_eval_opt -march=core-avx2

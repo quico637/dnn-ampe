@@ -30,7 +30,7 @@ void practica2Linear(float *MK_matrix, float *KN_matrix, float *output_matrix, i
     const int vector_rest = K % vector_size;
     const int last_k = K - vector_size;
 
-    #pragma omp parallel for collapse(2)
+    //#pragma omp parallel for collapse(2)
     for (int i = 0; i < M; i++)
     {
         for (int j = 0; j < N; j++)
