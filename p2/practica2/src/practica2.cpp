@@ -1,6 +1,7 @@
 #include "../include/practica2.h"
 #include <iostream>
 #include <immintrin.h>
+#include <omp.h>
 
 void practica2LinearSeq(float *MK_matrix, float *KN_matrix, float *output_matrix, int M, int K, int N)
 {
@@ -22,12 +23,14 @@ void practica2LinearSeq(float *MK_matrix, float *KN_matrix, float *output_matrix
 
 void practica2Linear(float *MK_matrix, float *KN_matrix, float *output_matrix, int M, int K, int N)
 {
+    //omp_set_num_threads(2);
     std::cout << "Running the code for matrix multiplication" << std::endl;
 
     const int vector_size = 8;
     const int vector_rest = K % vector_size;
     const int last_k = K - vector_size;
 
+    #pragma omp parallel for collapse(2)
     for (int i = 0; i < M; i++)
     {
         for (int j = 0; j < N; j++)
