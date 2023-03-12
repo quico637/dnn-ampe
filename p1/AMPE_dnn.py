@@ -50,6 +50,7 @@ class My_DNN(nn.Module):
 
     def inferencia(self, image):
         # COMPROBACION Y EVALUACION DE LA PRECISION DE LA RED 
+        st = time()
         transform = torchvision.transforms.Compose([
             torchvision.transforms.ToTensor(),
             torchvision.transforms.Normalize((0.5,), (0.5,))])
@@ -63,7 +64,12 @@ class My_DNN(nn.Module):
         ps = torch.exp(logps)
         probab = list(ps.numpy()[0])
         
+        et = time()
+        elapsed_time = et - st
+
         print("Predicted Digit =", probab.index(max(probab)))
+        print("Elapsed time = ", elapsed_time)
+
 
 
 

@@ -18,9 +18,9 @@ PARENT_PATH = './weights/'
 class My_DNN(nn.Module):
     def __init__(self, epochs=15, file='my_weights.pt'):
         super().__init__()
-        self.fc1 = nn.practica2Linear(784, 128)
-        self.fc2 = nn.practica2Linear(128, 64)
-        self.fc3 = nn.practica2Linear(64,10)
+        self.fc1 = nn.Practica2Linear(784, 128)
+        self.fc2 = nn.Practica2Linear(128, 64)
+        self.fc3 = nn.Practica2Linear(64,10)
 
         self.epochs = epochs
         self.file = file
