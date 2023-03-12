@@ -1,0 +1,4 @@
+# ninja log v5
+0	19696	1678652446788225596	/home/ampe/dnn-ampe/p2/practica2/build/temp.linux-x86_64-3.7/practica2_connection/torch_practica2.o	ed8e1934502f1c7
+1	505	1678653186734578183	/home/ampe/dnn-ampe/p2/practica2/build/temp.linux-x86_64-3.7/src/practica2.o	e2672d9aae853129
+1	13559	1678653199362753162	/home/ampe/dnn-ampe/p2/practica2/build/temp.linux-x86_64-3.7/practica2_connection/torch_practica2.o	2782758f876db588

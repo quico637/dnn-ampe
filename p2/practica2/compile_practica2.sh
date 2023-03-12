@@ -7,12 +7,12 @@ fi
 
 if test "$1" == "install"
 then
-    echo "System ready to be installed"
-    if ! grep -q avx /proc/cpuinfo
-    then
-        echo "AVX is not supported in this CPU."
-        exit 1
-    fi
+#    echo "System ready to be installed"
+#    if ! grep -q avx /proc/cpuinfo
+#    then
+#        echo "AVX is not supported in this CPU."
+#        exit 1
+#    fi
 
     echo "AVX support: Yes"
 
@@ -21,15 +21,15 @@ then
     #g++ -mavx -fopenmp src/main_test.cpp src/practica2.cpp -o practica2_test -march=core-avx2
     #g++ -mavx -fopenmp src/main_seq.cpp src/practica2.cpp -o practica2_eval_seq -march=core-avx2
     #g++ -mavx -fopenmp src/main_opt.cpp src/practica2.cpp -o practica2_eval_opt -march=core-avx2
-    g++ -mavx -fopenmp src/main_test.cpp src/practica2.cpp -o practica2_test -march=core-avx2
-    g++ -mavx -fopenmp src/main_seq.cpp src/practica2.cpp -o practica2_eval_seq -march=core-avx2
-    g++ -mavx -fopenmp src/main_opt.cpp src/practica2.cpp -o practica2_eval_opt -march=core-avx2
+    g++ -mavx src/main_test.cpp src/practica2.cpp -o practica2_test -march=core-avx2
+    g++ -mavx src/main_seq.cpp src/practica2.cpp -o practica2_eval_seq -march=core-avx2
+    g++ -mavx src/main_opt.cpp src/practica2.cpp -o practica2_eval_opt -march=core-avx2
     if test $? -eq 1
     then
         echo "Please fix the code!"
 	exit 1
     fi
-    CFLAGS="-mavx" python setup.py install
+    CFLAGS="-mavx -march=core-avx2" python setup.py install
     exit 0
 
 elif test "$1" == "clean"
